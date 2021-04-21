@@ -8,7 +8,6 @@ from django.shortcuts import redirect
 
 from account.otp_form import OtpForm
 
-from account.tasks import notify_user
 
 #from twilio.rest import Client
 #import math, random 
@@ -83,8 +82,6 @@ class OTPView(generics.GenericAPIView):
 
         entered_otp = request.data["otp"]
         phone_number = request.data["phone_number"]
-
-        notify_user()
 
         #verification
         is_verified = self.verify_otp(entered_otp, phone_number)

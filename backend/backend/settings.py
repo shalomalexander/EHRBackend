@@ -27,7 +27,7 @@ SECRET_KEY = 'ty19=!&!-d)3lv9ec2%r7m(cd9fx5zgq)&z)ng5!)d8zu1nqe-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.5', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.1.5', '127.0.0.1', 'shalomalexander.pythonanywhere.com/']
 
 AUTH_USER_MODEL = "account.User"
 
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'account',
     'knox',
 
-    'background_task',   
+    'allauth',   
 ]
 
 SITE_ID = 1
@@ -163,3 +163,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
