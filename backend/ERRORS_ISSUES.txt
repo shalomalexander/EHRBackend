@@ -1,0 +1,62 @@
+#ERROR: rest-auth/registration returns connection refused WINERROR!!
+This error has popped when i created a custom registration form using rest-auth.registration
+RESOLVED!
+https://github.com/Tivix/django-rest-auth/issues/407 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+#Raw Json Format of Prescription Info
+
+{
+"addedBy": "Doctor",
+"hospitalOrClinic":null,
+"precriberId": 1,
+"doctorName": "Dr Khan",
+"prescriptionDate":"2020-08-17",
+"contactNumber":"9873738859",
+"address":"Gyan Khand-2",
+"medicines":["paracentamol", "Azi-500"],
+"precriptionAttachment": null,
+"userId":1
+}
+
+Date format must be YYYY-MM-DD
+
+Registration POST url:
+-----------------------------------------------
+POST:  http://127.0.0.1:8000/api/auth/register
+
+Headers: { Content-Type : application/json}
+
+Body: {
+    "username":"Dr1",
+    "email":"dr1@dr.com",
+    "password":"123456",
+    "is_MP":true
+}
+
+
+Login POST url:
+--------------------------------------
+POST:  http://127.0.0.1:8000/api/auth/login
+
+Headers: { Content-Type : application/json}
+
+Body: {
+    "username":"Dr1",
+    "password":"123456",
+}
+
+
+User Detail Fetch:
+-----------------------------------------
+GET:  http://127.0.0.1:8000/api/auth/user
+
+Headers: {Authorization: Token 3335338bc97d0a279d60f50309759558cd98ec6d8b171906ef5f7d2e6897b479}
+
+
+Logout of User:
+-----------------------------------------
+POST:  http://127.0.0.1:8000/api/auth/logout
+
+Headers: {Authorization: Token 3335338bc97d0a279d60f50309759558cd98ec6d8b171906ef5f7d2e6897b479}

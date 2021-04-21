@@ -1,0 +1,62 @@
+######Organization
+{
+    "id": 1,
+    "orgName": "City Hospital",
+    "address": "Karol Bhag",
+    "activeIndicator": "Y",
+    "orgRegNumber": "201014CTYH"
+}
+
+{
+    "id": 2,
+    "orgName": "FortisHospital",
+    "address": "Noida Sector - 62",
+    "activeIndicator": "Y",
+    "orgRegNumber": "201012FRTSH"
+}
+
+###### Medical Practitioner #####
+
+{
+    "id": 1,
+    "name": "Mr. Khan",
+    "licenseNumber": "DR1234",
+    "profile": "Physician",
+    "mobileNumber": "9873738859",
+    "address": "Indirapuram",
+    "activeIndicator": "Y",
+    "orgId": 1
+}
+
+{
+    "id": 2,
+    "name": "Mr. Sukla",
+    "licenseNumber": "DT1235",
+    "profile": "Dentist",
+    "mobileNumber": "9873735588",
+    "address": "Ghaizabad",
+    "activeIndicator": "Y",
+    "orgId": 1
+}
+
+{
+    "id": 3,
+    "name": "Mrs. Saramma",
+    "licenseNumber": "NRNM39082",
+    "profile": "ANS",
+    "mobileNumber": "9899129257",
+    "address": "Indirapuram",
+    "activeIndicator": "Y",
+    "orgId": 2
+}
+
+{
+    "id": 4,
+    "name": "Mr Alex",
+    "licenseNumber": "LM39082",
+    "profile": "Pathology Manager",
+    "mobileNumber": "9873739357",
+    "address": "Indirapuram",
+    "activeIndicator": "N",
+    "orgId": 2
+}
