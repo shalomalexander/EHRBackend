@@ -57,7 +57,7 @@ class MyUserManager(BaseUserManager):
 
     def sendOTP(self, message_body, message_to):
         account_sid = 'AC04d9ddbb4105da6ad405e12709488071'
-        auth_token = '120ffb054bfeb0e0f162673a246294a1'
+        auth_token = '2fed696c4a6d5e6b60114bc92658eb06'
         client = Client(account_sid, auth_token)
 
         message = client.messages.create(
@@ -97,3 +97,6 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+    def get_phone_number(self):
+        return self.phone_number

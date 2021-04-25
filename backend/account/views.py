@@ -90,7 +90,8 @@ class OTPView(generics.GenericAPIView):
             print("verified")
             User.objects.filter(phone_number = phone_number).update(verified_field = True)
         else:
-            print("unverified")    
+            print("unverified")
+                
         return Response("This is OTP" + str(entered_otp))    
 
     def verify_otp(self, entered_otp, ph_number):

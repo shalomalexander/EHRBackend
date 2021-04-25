@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from appV1 import models
+from api import models as m
 
 # from allauth.account.adapter import get_adapter
 # from rest_auth.registration.serializers import RegisterSerializer
@@ -70,3 +71,26 @@ class PharmacyInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PharmacyInfo
         fields = '__all__'
+
+class AccessVerificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AccessVerification
+        fields = '__all__' 
+        # exclude = ('verify_otp',) 
+
+
+class AccessVerificationAllSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AccessVerification
+        fields = '__all__'           
+
+class OTPAccessVerificationSerializer(serializers.Serializer):
+    otp = serializers.CharField()
+    pid = serializers.CharField()
+    did = serializers.CharField()
+
+    def create(self, validated_data):
+        """
+        Create and return a new `Snippet` instance, given the validated data.
+        """
+        return m.OTP(**validated_data)

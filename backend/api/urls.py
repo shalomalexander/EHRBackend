@@ -2,6 +2,8 @@ from django.urls import path, include
 
 from . import views
 
+from prediction import views as v
+
 urlpatterns = [
     
     path('PersonalInfo/', views.PersonalInfoList.as_view()),
@@ -12,7 +14,10 @@ urlpatterns = [
     path('InsuranceInfo/', views.InsuranceInfoList.as_view()),
     path('InsuranceInfo/<int:pk>', views.InsuranceInfoList.as_view()),
     path('PrescriptionInfo/', views.PrescriptionInfoList.as_view()),
+    path('PrescriptionInfo/<int:fk>', views.PrescriptionInfoList.as_view()),
     path('PrescriptionInfoOfSpecificUser/', views.PrescriptionInfoOfSpecificUser.as_view()),
+    path('PrescriptionInfoByPid/<int:fk>', views.PrescriptionInfoByPid.as_view()),
+    
 
     path('OrganizationInfo/', views.OrganizationInfoList.as_view()),
     path('OrganizationInfo/<int:pk>/', views.OrganizationInfoDetail.as_view()),
@@ -35,6 +40,11 @@ urlpatterns = [
     path('RespiratoryRate/<int:pk>', views.RespiratoryRateDetail.as_view()),
     path('RespiratoryRateOfSpecificUser/<int:fk>/', views.RespiratoryRateOfSpecificUser.as_view()),
 
+    path('prediction/', v.DiseasePrediction.as_view()),
+
+    path('accessverification/', views.AccessVerificationCreation.as_view()),
+
+    path('otpaccessverification/', views.OTPAccessVerificationView.as_view()),
     # path('Register/', include('rest_auth.registration.urls')),
   
 ]

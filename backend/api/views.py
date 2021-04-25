@@ -8,6 +8,10 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework.renderers import HTMLFormRenderer, JSONRenderer, BrowsableAPIRenderer
 from django.http import Http404
+from account.models import User
+import math, random 
+from twilio.rest import Client
+from appV1.models import AccessVerification
 
 # Create your views here.
 
@@ -33,7 +37,7 @@ class PersonalInfoOfSpecificUser(APIView):
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
     def get_object(self, pk):
         try:
-            return models.PersonalInfo.objects.get(pk = pk)
+            return models.PersonalInfo.objects.get(user = pk)
         except models.PersonalInfo.DoesNotExist:
             raise Http404
 
@@ -113,12 +117,10 @@ class PrescriptionInfoList(APIView):
     permissions_classes = [
         permissions.IsAuthenticated
     ]
-
-
     #This GET request is for doctors
-    def get(self, request):
+    def get(self, request, fk):
         #queryset = models.PrescriptionInfo.objects.all()
-        queryset = models.PrescriptionInfo.objects.filter(prescriberId = request.user)
+        queryset = models.PrescriptionInfo.objects.filter(prescriberId = fk)
         serializer = serializers.PrescriptionInfoGetSerializer(queryset, many=True)    #Serializer for Get
         return Response(serializer.data)
 
@@ -140,6 +142,18 @@ class PrescriptionInfoList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+class PrescriptionInfoByPid(APIView):
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    permissions_classes = [
+        permissions.IsAuthenticated
+    ]
+
+    def get(self, request, fk):
+        #queryset = models.PrescriptionInfo.objects.all()
+        queryset = models.PrescriptionInfo.objects.filter(userId = fk)
+        serializer = serializers.PrescriptionInfoGetSerializer(queryset, many=True)    #Serializer for Get
+        return Response(serializer.data)
 
 class PrescriptionInfoOfSpecificUser(APIView):
     permissions_classes = [
@@ -330,7 +344,7 @@ class BodyTemperatureList(APIView):
 class BodyTemperatureDetail(APIView):
     def get_object(self, pk):
         try:
-            return models.BodyTemperature.objects.get(id = pk)
+            return models.BodyTemperature.objects.get(userId = pk)
         except models.BodyTemperature.DoesNotExist:
             raise Http404
 
@@ -449,4 +463,90 @@ class RespiratoryRateOfSpecificUser(APIView):
     def get(self, request, fk, format=None):
         queryset = self.get_object(fk)
         serializer = serializers.RespiratoryRateSerializer(queryset, many=True)
-        return Response(serializer.data)          
+        return Response(serializer.data)      
+
+from django.core.serializers import serialize
+class AccessVerificationCreation(APIView):
+    serializer_class = serializers.AccessVerificationSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    
+    def post(self, request, format=None):
+        
+        request.data._mutable = True  
+        data = request.data
+        otp = self.generateOTP() 
+        data["otp"] = otp
+
+        serializer = serializers.AccessVerificationSerializer(data = request.data) 
+
+        stored_qs = AccessVerification.objects.filter(pid=request.data["pid"]).filter(did=request.data["did"])
+
+        qs = User.objects.get(id = request.data["pid"])
+        phone_number = qs.get_phone_number()
+        #self.sendOTP(otp,phone_number)
+        
+        if stored_qs is None:
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            if request.data.get("prescription_field") is not None:
+                stored_qs.update(prescription_field=True)
+            else:
+                stored_qs.update(prescription_field=False)    
+
+            if request.data.get("blood_pressure_field") is not None:
+                stored_qs.update(blood_pressure_field=True) 
+            else:
+                stored_qs.update(blood_pressure_field=False)      
+
+            stored_qs.update(otp=otp,verify_otp=False)
+            if serializer.is_valid():
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)     
+
+    def generateOTP(self) : 
+        digits = "0123456789"
+        OTP = "" 
+        for i in range(6) : 
+            OTP += digits[math.floor(random.random() * 10)] 
+
+        return OTP
+
+    def sendOTP(self, message_body, message_to):
+        account_sid = 'AC04d9ddbb4105da6ad405e12709488071'
+        auth_token = '2fed696c4a6d5e6b60114bc92658eb06'
+        client = Client(account_sid, auth_token)
+
+        message = client.messages.create(
+                                    body = str(message_body),
+                                    from_ = '+12568012849',
+                                    to = '+91' + str(message_to)
+                                )
+        print(message.sid)    
+
+
+class OTPAccessVerificationView(APIView):
+    serializer_class = serializers.OTPAccessVerificationSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+
+    def post(self, request, format=None):
+        serializer = serializers.OTPAccessVerificationSerializer(data = request.data) 
+        did = request.data["did"]
+        pid = request.data["pid"]
+        otp = request.data["otp"]
+
+        qs = AccessVerification.objects.filter(pid = pid).filter(did=did)
+        print(qs)
+        print(qs[0].get_otp())
+        stored_otp = qs[0].get_otp()
+
+        if(stored_otp == otp):
+            qs.update(verify_otp=True)
+        else:
+            return Response("The OTP doesnt match")    
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)

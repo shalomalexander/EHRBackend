@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'is_MP', 'is_pharma')
+        fields = ('id', 'username', 'email', 'is_MP', 'is_pharma', 'verified_field', 'phone_number')
 
 # Register Serializer
 class RegisterSerializer(serializers.ModelSerializer):
@@ -32,8 +32,8 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, data):
         user = authenticate(**data)
         if user and user.is_active:
-            return user
-        raise serializers.ValidateError("Incorret Credentials")    
+            return user  
+        raise serializers.ValidationError("Incorrect Credentials")    
 
 #Serializer for OTP
 class OTPSerializer(serializers.ModelSerializer):

@@ -14,4 +14,5 @@ admin.site.register(models.BodyTemperature)
 admin.site.register(models.HeartRate)
 admin.site.register(models.RespiratoryRate)
 admin.site.register(models.PharmacyInfo)
+admin.site.register(models.AccessVerification)
 
