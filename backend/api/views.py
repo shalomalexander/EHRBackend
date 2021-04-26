@@ -12,6 +12,7 @@ from account.models import User
 import math, random 
 from twilio.rest import Client
 from appV1.models import AccessVerification
+from account.fast2sms import SMS
 
 # Create your views here.
 
@@ -465,14 +466,14 @@ class RespiratoryRateOfSpecificUser(APIView):
         serializer = serializers.RespiratoryRateSerializer(queryset, many=True)
         return Response(serializer.data)      
 
-from django.core.serializers import serialize
+# from django.core.serializers import serialize
 class AccessVerificationCreation(APIView):
     serializer_class = serializers.AccessVerificationSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
     
     def post(self, request, format=None):
         
-        request.data._mutable = True  
+        #request.data._mutable = True  
         data = request.data
         otp = self.generateOTP() 
         data["otp"] = otp
@@ -483,20 +484,24 @@ class AccessVerificationCreation(APIView):
 
         qs = User.objects.get(id = request.data["pid"])
         phone_number = qs.get_phone_number()
+        sms = SMS()
+        #sms.sendOTP(otp,phone_number)
         #self.sendOTP(otp,phone_number)
-        
-        if stored_qs is None:
+        print("After OTP send")
+        print(stored_qs)
+        if not stored_qs:
             if serializer.is_valid():
+                print("Inside If statement")
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             if request.data.get("prescription_field") is not None:
-                stored_qs.update(prescription_field=True)
+                stored_qs.update(prescription_field=request.data.get("prescription_field"))
             else:
                 stored_qs.update(prescription_field=False)    
 
             if request.data.get("blood_pressure_field") is not None:
-                stored_qs.update(blood_pressure_field=True) 
+                stored_qs.update(blood_pressure_field=request.data.get("blood_pressure_field")) 
             else:
                 stored_qs.update(blood_pressure_field=False)      
 
@@ -512,20 +517,7 @@ class AccessVerificationCreation(APIView):
         for i in range(6) : 
             OTP += digits[math.floor(random.random() * 10)] 
 
-        return OTP
-
-    def sendOTP(self, message_body, message_to):
-        account_sid = 'AC04d9ddbb4105da6ad405e12709488071'
-        auth_token = '2fed696c4a6d5e6b60114bc92658eb06'
-        client = Client(account_sid, auth_token)
-
-        message = client.messages.create(
-                                    body = str(message_body),
-                                    from_ = '+12568012849',
-                                    to = '+91' + str(message_to)
-                                )
-        print(message.sid)    
-
+        return OTP 
 
 class OTPAccessVerificationView(APIView):
     serializer_class = serializers.OTPAccessVerificationSerializer
@@ -550,3 +542,42 @@ class OTPAccessVerificationView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+# 1. Create a presccription view
+# 2. AccessVerification object has to be checked for verify OTP for the particular PID and DID
+# 3. If verify_otp field is True then send the Response with data  
+
+class AccessPrescriptionView(APIView):
+    serializer_class = serializers.AccessPrescriptionSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+
+    def get_object(self, fk):
+        try:
+            return models.PrescriptionInfo.objects.filter(userId = fk)
+        except models.PrescriptionInfo.DoesNotExist:
+            raise Http404
+
+    def post(self, request, format=None):
+        serializer = serializers.AccessPrescriptionSerializer(data = request.data)
+        did = request.data.get("did")
+        pid = request.data.get("pid")
+
+        qs = AccessVerification.objects.filter(pid = pid).filter(did=did)
+        print(qs)
+        if not qs:
+            return Response("No Access")
+        else:    
+            if qs[0].get_verify_otp() == True:
+                if qs[0].get_prescription_field() == True:
+                    userPrescriptions = self.get_object(fk = pid)
+                    serializer = serializers.PrescriptionInfoGetSerializer(userPrescriptions, many=True)
+                    return Response(serializer.data)     
+            else:
+                return Response("No Access")
+
+        return Response("No Access")      
+            
+
+
+        
+            

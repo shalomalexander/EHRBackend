@@ -94,3 +94,10 @@ class OTPAccessVerificationSerializer(serializers.Serializer):
         Create and return a new `Snippet` instance, given the validated data.
         """
         return m.OTP(**validated_data)
+
+class AccessPrescriptionSerializer(serializers.Serializer):
+    did = serializers.CharField()
+    pid = serializers.CharField()
+
+    def create(self, validated_data):
+        return m.AccessPrescription(**validated_data)     

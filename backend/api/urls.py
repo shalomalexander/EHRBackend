@@ -45,6 +45,9 @@ urlpatterns = [
     path('accessverification/', views.AccessVerificationCreation.as_view()),
 
     path('otpaccessverification/', views.OTPAccessVerificationView.as_view()),
+
+    path('accessprescription/', views.AccessPrescriptionView.as_view()),
+
     # path('Register/', include('rest_auth.registration.urls')),
   
 ]

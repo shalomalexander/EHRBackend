@@ -161,3 +161,8 @@ class AccessVerification(models.Model):
     def set_verify_otp(self,data):
         self.verify_otp = data 
      
+    def get_verify_otp(self):
+        return self.verify_otp 
+
+    def get_prescription_field(self):
+        return self.prescription_field    

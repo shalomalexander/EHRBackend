@@ -1,0 +1,2 @@
+SECRET_KEY ty19=!&!-d)3lv9ec2%r7m(cd9fx5zgq)&z)ng5!)d8zu1nqe-
+FAST2SMS JabVWlKdz8iYnSRpMo3IQEtP45Ayskv0NOgu7Bf2xeHCThcFXjrtaMm2fWgwEPo0SATVelN5DczYGXF1

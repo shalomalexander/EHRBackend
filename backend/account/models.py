@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import math, random 
-from twilio.rest import Client
+from account.fast2sms import SMS
 # Create your models here.
 class MyUserManager(BaseUserManager):
 
@@ -16,8 +16,10 @@ class MyUserManager(BaseUserManager):
             raise ValueError("User must have a phone number") 
 
         #Generation of OTP for the user with the specific phone number
+        sms = SMS()
         otp = self.generateOTP()
-        self.sendOTP(otp, phone_number)
+        sms.sendOTP(otp=otp, phone_number = phone_number)
+        # self.sendOTP(otp, phone_number)
     
         user = self.model(
             email = self.normalize_email(email),
