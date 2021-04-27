@@ -10,7 +10,6 @@ from rest_framework.renderers import HTMLFormRenderer, JSONRenderer, BrowsableAP
 from django.http import Http404
 from account.models import User
 import math, random 
-from twilio.rest import Client
 from appV1.models import AccessVerification
 from account.fast2sms import SMS
 
