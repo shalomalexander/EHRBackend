@@ -22,7 +22,7 @@ urlpatterns = [
     path('OrganizationInfo/', views.OrganizationInfoList.as_view()),
     path('OrganizationInfo/<int:pk>/', views.OrganizationInfoDetail.as_view()),
     path('MedicalPractitionerInfo/', views.MedicalPractitionerInfoList.as_view()),
-    path('MedicalPractitionerInfo/<int:pk>', views.MedicalPractitionerInfoList.as_view()),
+    path('MedicalPractitionerInfoDetail/<int:pk>', views.MedicalPractitionerInfoDetail.as_view()),
     path('MedicalPractitionerInfoOfSpecificOrganization/<int:fk>/', views.MedicalPractitionerInfoOfSpecificOrganization.as_view()),
     
     path('PharmacyInfoList/', views.PharmacyInfoList.as_view()),

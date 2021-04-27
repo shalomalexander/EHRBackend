@@ -132,9 +132,13 @@ class PrescriptionInfoList(APIView):
             #Checking whether the prescriber is a valid Prescriber
             pid = serializer.validated_data.get("prescriberId")
             #print(pid.__dict__['id'])
+            activeIndicator = models.MedicalPractitionerInfo.objects.get(user = pid.__dict__['id']).__dict__["activeIndicator"]
+            print(pid)
             ln = models.MedicalPractitionerInfo.objects.get(user = pid.__dict__['id']).__dict__["licenseNumber"]
+            
             #print(ln)
-            if(ln[0:1] == 'D'):
+            #print(activeIndicator)
+            if(ln[0:1] == 'D' and activeIndicator=="Y"):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
@@ -227,8 +231,19 @@ class MedicalPractitionerInfoList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = serializers.MedicalPractitionerInfoSerializer(data = request.data)         
+        serializer = serializers.MedicalPractitionerInfoSerializer(data = request.data)
         
+        orgid = request.data["orgId"]
+        phone_number = request.data["mobileNumber"]
+
+        org_qs = models.OrganizationInfo.objects.filter(id=orgid)
+
+        if not org_qs:
+            return Response("ORG_ERROR")   
+
+        if len(phone_number) > 10:
+            return Response("PHONE_ERROR")
+               
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -245,7 +260,22 @@ class MedicalPractitionerInfoList(APIView):
         queryset = self.get_object(pk = pk, user=request.user)
         #serializer = serializers.InsuranceInfoSerializer(queryset, many=False)
         queryset.delete() 
-        return Response("Delete Successful!");                                 
+        return Response("Delete Successful!");   
+
+class MedicalPractitionerInfoDetail(APIView):
+    serializer_class = serializers.MedicalPractitionerInfoSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    permissions_classes = [
+        permissions.IsAuthenticated
+    ]
+
+    def get(self, request, pk, format=None):
+        queryset = models.MedicalPractitionerInfo.objects.filter(user = pk)
+        if not queryset:
+            return Response("NO_INFO_ERROR")
+
+        serializer = serializers.MedicalPractitionerInfoSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 class MedicalPractitionerInfoOfSpecificOrganization(APIView):
     def get_object(self, fk):

@@ -76,7 +76,7 @@ class MedicalPractitionerInfo(models.Model):
         ("Y","YES"),
         ("N", "NO")
     ]
-    activeIndicator = models.CharField(max_length=1, choices=ACTIVE_CHOICES)
+    activeIndicator = models.CharField(default="N", max_length=1, choices=ACTIVE_CHOICES)
     orgId = models.ForeignKey(OrganizationInfo, null= True, on_delete = models.SET_NULL)
 
 class PharmacyInfo(models.Model):
