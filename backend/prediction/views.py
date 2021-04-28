@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework.renderers import HTMLFormRenderer, JSONRenderer, BrowsableAPIRenderer
 from django.http import Http404
-from DiseasePrediction.RFPrediction import predict
+from DiseasePrediction2.RFPrediction import predict
 
 class DiseasePrediction(APIView):
     serializer_class = serializers.PredictionSerializer

@@ -50,7 +50,9 @@ INSTALLED_APPS = [
     'account',
     'knox',
 
-    'allauth',   
+    'allauth', 
+
+    'DiseasePrediction2'  
 ]
 
 SITE_ID = 1
