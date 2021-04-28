@@ -14,7 +14,7 @@ print(os.path.join(os.path.abspath("DiseasePrediction/training.csv")))
 
 
 #df = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction/training.csv")))
-df = pd.read_csv(os.path.join(os.path.abspath("~/var/www/sites/mysite/backend/DiseasePrediction/training.csv")))
+df = pd.read_csv(os.path.join(os.path.abspath("var/www/sites/mysite/backend/DiseasePrediction/training.csv")))
 
 X = df.iloc[:,:-1]
 y = df.iloc[:,-1]
@@ -23,7 +23,7 @@ clf = RandomForestClassifier(n_estimators=100)
 clf = clf.fit(X,np.ravel(y))
 
 #df_test = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction/testing.csv")))
-df_test = pd.read_csv(os.path.join(os.path.abspath("~/var/www/sites/mysite/backend/DiseasePrediction/testing.csv")))
+df_test = pd.read_csv(os.path.join(os.path.abspath("var/www/sites/mysite/backend/DiseasePrediction/testing.csv")))
 X_df_test = df_test.iloc[:,:-1]
 y_df_test = df_test.iloc[:,-1]
 
