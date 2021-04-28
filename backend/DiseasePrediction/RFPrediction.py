@@ -4,17 +4,23 @@ import numpy as np
 import os
 import sys
 from sklearn.ensemble import RandomForestClassifier
-# sys.path.append("..\DiseasePrediction\\")
+sys.path.append("..\DiseasePrediction\\")
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'..\DiseasePrediction\\'))
+
+path1 = "/backend/DiseasePrediction/training.csv"
+path2 = "/backend/DiseasePrediction/testing.csv"
+
+start = "/backend"
 
 
 print(os.getcwd())
 print("Checking abspath")
-print(os.path.exists(os.path.abspath("DiseasePrediction/training.csv")))
-print(os.path.join(os.path.abspath("DiseasePrediction/training.csv")))
+print(os.path.exists(os.path.relpath(path=path1, start=start)))
+print(os.path.exists(os.path.relpath(path=path2, start=start)))
 
 
 #df = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction/training.csv")))
-df = pd.read_csv(os.path.join(os.path.abspath("var/www/sites/mysite/backend/DiseasePrediction/training.csv")))
+df = pd.read_csv(os.path.join(os.path.relpath(path=path1, start=start)))
 
 X = df.iloc[:,:-1]
 y = df.iloc[:,-1]
@@ -23,7 +29,7 @@ clf = RandomForestClassifier(n_estimators=100)
 clf = clf.fit(X,np.ravel(y))
 
 #df_test = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction/testing.csv")))
-df_test = pd.read_csv(os.path.join(os.path.abspath("var/www/sites/mysite/backend/DiseasePrediction/testing.csv")))
+df_test = pd.read_csv(os.path.join(os.path.relpath(path=path2, start=start)))
 X_df_test = df_test.iloc[:,:-1]
 y_df_test = df_test.iloc[:,-1]
 
