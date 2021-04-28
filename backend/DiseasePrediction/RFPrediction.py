@@ -1,10 +1,14 @@
 # def train():
 import pandas as pd
 import numpy as np
+import os
+import sys
 from sklearn.ensemble import RandomForestClassifier
+# sys.path.append("..\DiseasePrediction\\")
 
 
-df = pd.read_csv('C:/Users/ShalomAlexander/Documents/4th Year Project/AROGYA_EHR_APP/backend/DiseasePrediction/training.csv')
+print(os.getcwd())
+df = pd.read_csv(os.path.join('DiseasePrediction','training.csv'))
 
 X = df.iloc[:,:-1]
 y = df.iloc[:,-1]
@@ -12,7 +16,7 @@ y = df.iloc[:,-1]
 clf = RandomForestClassifier(n_estimators=100)
 clf = clf.fit(X,np.ravel(y))
 
-df_test = pd.read_csv('C:/Users/ShalomAlexander/Documents/4th Year Project/AROGYA_EHR_APP/backend/DiseasePrediction/testing.csv')
+df_test = pd.read_csv(os.path.join('DiseasePrediction','testing.csv'))
 X_df_test = df_test.iloc[:,:-1]
 y_df_test = df_test.iloc[:,-1]
 
