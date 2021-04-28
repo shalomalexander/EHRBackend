@@ -15,7 +15,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 print(os.getcwd())
-# print("Checking abspath")
+print("Checking abspath")
 # print(os.path.join(os.path.dirname(os.path.relpath(path="/backend", start="/backend")),'\\DiseasePrediction\\training.csv'))
 # print(os.path.exists(os.path.join(os.path.dirname(os.path.relpath(path="/backend", start="/backend")),'\\DiseasePrediction\\training.csv')))
 # print(os.path.exists(os.path.relpath(path=path1, start=start)))
@@ -25,8 +25,9 @@ print(os.getcwd())
 
 #df = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction/training.csv")))
 #df = pd.read_csv(os.path.join(os.path.relpath(path=path1, start=start)))
-df = pd.read_csv("DiseasePrediction2/training.csv")
-df_test = pd.read_csv("DiseasePrediction2/training.csv")
+print(os.path.join(os.path.abspath("DiseasePrediction2/training.csv")))
+df = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/training.csv")))
+df_test = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/training.csv")))
 
 X = df.iloc[:,:-1]
 y = df.iloc[:,-1]
@@ -36,7 +37,7 @@ clf = clf.fit(X,np.ravel(y))
 
 #df_test = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction/testing.csv")))
 #df_test = pd.read_csv(os.path.join(os.path.relpath(path=path2, start=start)))
-df_test = pd.read_csv("DiseasePrediction2/testing.csv")
+df_test = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/testing.csv")))
 X_df_test = df_test.iloc[:,:-1]
 y_df_test = df_test.iloc[:,-1]
 
