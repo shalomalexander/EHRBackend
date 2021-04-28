@@ -4,30 +4,10 @@ import numpy as np
 import os
 import sys
 from sklearn.ensemble import RandomForestClassifier
-# sys.path.append("..\DiseasePrediction\\")
-# sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'..\DiseasePrediction\\'))
 
-# path1 = "/www/sites/mysite/backend/DiseasePrediction/training.csv"
-# path2 = "/www/sites/mysite/backend/DiseasePrediction/testing.csv"
-
-# # start = "/backend"
-# start = "/var/www"
-
-
-print(os.getcwd())
-print("Checking abspath")
-# print(os.path.join(os.path.dirname(os.path.relpath(path="/backend", start="/backend")),'\\DiseasePrediction\\training.csv'))
-# print(os.path.exists(os.path.join(os.path.dirname(os.path.relpath(path="/backend", start="/backend")),'\\DiseasePrediction\\training.csv')))
-# print(os.path.exists(os.path.relpath(path=path1, start=start)))
-# print(os.path.relpath(path=path1, start=start))
-# print(os.path.exists(os.path.relpath(path=path2, start=start)))
-
-
-#df = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction/training.csv")))
-#df = pd.read_csv(os.path.join(os.path.relpath(path=path1, start=start)))
-print(os.path.join(os.path.abspath("DiseasePrediction2/training.csv")))
-df = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/training.csv")))
-df_test = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/training.csv")))
+print(os.path.join(os.path.abspath("DiseasePrediction2/testing.csv")))
+#df = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/training.csv"))) #Use for local system
+df = pd.read_csv("/var/www/sites/mysite/backend/DiseasePrediction2/training.csv") #Use for Pythonanywhere
 
 X = df.iloc[:,:-1]
 y = df.iloc[:,-1]
@@ -35,9 +15,8 @@ y = df.iloc[:,-1]
 clf = RandomForestClassifier(n_estimators=100)
 clf = clf.fit(X,np.ravel(y))
 
-#df_test = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction/testing.csv")))
-#df_test = pd.read_csv(os.path.join(os.path.relpath(path=path2, start=start)))
-df_test = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/testing.csv")))
+#df_test = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/testing.csv"))) #Use for local system
+df_test = pd.read_csv("/var/www/sites/mysite/backend/DiseasePrediction2/training.csv") #Use for PythonAnywhere
 X_df_test = df_test.iloc[:,:-1]
 y_df_test = df_test.iloc[:,-1]
 
@@ -49,6 +28,8 @@ y_pred = clf.predict(X_df_test)
 
 import collections
 def predict(s1,s2,s3,s4,s5):
+    print(os.path.join(os.path.abspath("DiseasePrediction2/testing.csv")))
+
 
     l1=[]
     for col in df.columns:
