@@ -7,15 +7,19 @@ from sklearn.ensemble import RandomForestClassifier
 sys.path.append("..\DiseasePrediction\\")
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'..\DiseasePrediction\\'))
 
-path1 = "/backend/DiseasePrediction/training.csv"
-path2 = "/backend/DiseasePrediction/testing.csv"
+path1 = "/www/sites/mysite/backend/DiseasePrediction/training.csv"
+path2 = "/www/sites/mysite/backend/DiseasePrediction/testing.csv"
 
-start = "/backend"
+# start = "/backend"
+start = "/var/www"
 
 
 print(os.getcwd())
 print("Checking abspath")
+print(os.path.join(os.path.dirname(os.path.relpath(path="/backend", start="/backend")),'\\DiseasePrediction\\training.csv'))
+print(os.path.exists(os.path.join(os.path.dirname(os.path.relpath(path="/backend", start="/backend")),'\\DiseasePrediction\\training.csv')))
 print(os.path.exists(os.path.relpath(path=path1, start=start)))
+print(os.path.relpath(path=path1, start=start))
 print(os.path.exists(os.path.relpath(path=path2, start=start)))
 
 
