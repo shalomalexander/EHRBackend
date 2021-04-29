@@ -514,7 +514,7 @@ class AccessVerificationCreation(APIView):
         qs = User.objects.get(id = request.data["pid"])
         phone_number = qs.get_phone_number()
         sms = SMS()
-        #sms.sendOTP(otp,phone_number)
+        sms.sendOTP(otp,phone_number)
         #self.sendOTP(otp,phone_number)
         print("After OTP send")
         print(stored_qs)
