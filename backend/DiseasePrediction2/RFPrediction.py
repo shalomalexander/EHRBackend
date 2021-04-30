@@ -6,8 +6,8 @@ import sys
 from sklearn.ensemble import RandomForestClassifier
 
 print(os.path.join(os.path.abspath("DiseasePrediction2/testing.csv")))
-#df = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/training.csv"))) #Use for local system
-df = pd.read_csv("/var/www/sites/mysite/backend/DiseasePrediction2/training.csv") #Use for Pythonanywhere
+df = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/training.csv"))) #Use for local system
+#df = pd.read_csv("/var/www/sites/mysite/backend/DiseasePrediction2/training.csv") #Use for Pythonanywhere
 
 X = df.iloc[:,:-1]
 y = df.iloc[:,-1]
@@ -15,8 +15,8 @@ y = df.iloc[:,-1]
 clf = RandomForestClassifier(n_estimators=100)
 clf = clf.fit(X,np.ravel(y))
 
-#df_test = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/testing.csv"))) #Use for local system
-df_test = pd.read_csv("/var/www/sites/mysite/backend/DiseasePrediction2/training.csv") #Use for PythonAnywhere
+df_test = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/testing.csv"))) #Use for local system
+#df_test = pd.read_csv("/var/www/sites/mysite/backend/DiseasePrediction2/training.csv") #Use for PythonAnywhere
 X_df_test = df_test.iloc[:,:-1]
 y_df_test = df_test.iloc[:,-1]
 

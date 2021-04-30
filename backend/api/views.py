@@ -500,8 +500,7 @@ class AccessVerificationCreation(APIView):
     serializer_class = serializers.AccessVerificationSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
     
-    def post(self, request, format=None):
-        
+    def post(self, request, format=None):  
         #request.data._mutable = True  
         data = request.data
         otp = self.generateOTP() 
@@ -538,7 +537,19 @@ class AccessVerificationCreation(APIView):
             if serializer.is_valid():
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)     
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, format=None):
+        queryset = models.AccessVerification.objects.filter(pid=request.user, verify_otp=True)
+        print(queryset)
+        
+        dids = []
+        for qs in queryset:
+            dids.append(models.MedicalPractitionerInfo.objects.get(user=qs.did))   
+        serializer = serializers.MedicalPractitionerInfoSerializer(dids, many=True)
+
+        return Response(serializer.data)    
+                 
 
     def generateOTP(self) : 
         digits = "0123456789"
@@ -547,6 +558,35 @@ class AccessVerificationCreation(APIView):
             OTP += digits[math.floor(random.random() * 10)] 
 
         return OTP 
+
+class AccessVerificationUpdate(APIView):
+    serializer_class = serializers.AccessVerificationSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    
+    def post(self, request, format=None):  
+        #request.data._mutable = True  
+        print(request.data)
+        serializer = serializers.AccessVerificationSerializer(data = request.data) 
+        stored_qs = AccessVerification.objects.filter(pid=request.data["pid"]).filter(did=request.data["did"])
+    
+        print(stored_qs)
+    
+        if request.data.get("prescription_field") is not None:
+            stored_qs.update(prescription_field=request.data.get("prescription_field"))
+        else:
+            stored_qs.update(prescription_field=False)    
+
+        if request.data.get("blood_pressure_field") is not None:
+            stored_qs.update(blood_pressure_field=request.data.get("blood_pressure_field")) 
+        else:
+            stored_qs.update(blood_pressure_field=False)      
+
+        stored_qs.update(verify_otp=False)
+
+        if serializer.is_valid():
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class OTPAccessVerificationView(APIView):
     serializer_class = serializers.OTPAccessVerificationSerializer

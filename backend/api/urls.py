@@ -43,6 +43,7 @@ urlpatterns = [
     path('prediction/', v.DiseasePrediction.as_view()),
 
     path('accessverification/', views.AccessVerificationCreation.as_view()),
+    path('accessverificationupdate/', views.AccessVerificationUpdate.as_view()),
 
     path('otpaccessverification/', views.OTPAccessVerificationView.as_view()),
 
