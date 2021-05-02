@@ -23,14 +23,50 @@ class PersonalInfoList(APIView):
         serializer = serializers.PersonalInfoSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    #Algorithm
+    #1. on post request check if a PersonalInfo object exist with that "user"
+    #2. If the data exist: do somethin
+        #Access the stored data model object
+        #Update the model with new values
+        #Then save the data to the database
+    #3. else: do the normal post method
+
     def post(self, request, format=None):
-        serializer = serializers.PersonalInfoSerializer(data = request.data)         
+        data = request.data
+
+        serializer = serializers.PersonalInfoSerializer(data = request.data)
+
+        stored_qs = models.PersonalInfo.objects.filter(user=request.data["user"])
+      
+        if not stored_qs:
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+        stored_qs.update(
+            user=request.data["user"],
+            firstName= request.data["firstName"],
+            lastName=request.data["lastName"],
+            middleName=request.data["middleName"],
+            gender=request.data["gender"],
+            dateOfBirth=request.data["dateOfBirth"],
+            bloodGroup=request.data["bloodGroup"],
+            emailId=request.data["emailId"],
+            mobileNumber=request.data["mobileNumber"],
+            alternateMobileNumber=request.data["alternateMobileNumber"],
+            addressLine1=request.data["addressLine1"],
+            addressLine2=request.data["addressLine2"],
+            cityOrTown=request.data["cityOrTown"],
+            district=request.data["district"],
+            state=request.data["state"],
+            pin=request.data["pin"],
+            aadhaarCardNumber=request.data["aadhaarCardNumber"]
+        )
+        return Response("Profile Updated")
+                 
         
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PersonalInfoOfSpecificUser(APIView):
     serializer_class = serializers.PersonalInfoSerializer
