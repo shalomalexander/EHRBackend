@@ -52,7 +52,15 @@ class PersonalInfoOfSpecificUser(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                   
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
+
+    def put(self, request, pk, format=None):
+        queryset = self.get_object(pk)
+        serializer = serializers.PersonalInfoSerializer(queryset, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                        
 
 
 class EmergencyInfoList(APIView):
