@@ -46,9 +46,9 @@ class PersonalInfoOfSpecificUser(APIView):
         serializer = serializers.PersonalInfoSerializer(queryset, many=False)
         return Response(serializer.data) 
 
-    def put(self, request, pk, format=None):
+    def patch(self, request, pk, format=None):
         queryset = self.get_object(pk)
-        serializer = serializers.PersonalInfoSerializer(queryset, data=request.data)
+        serializer = serializers.PersonalInfoSerializer(queryset, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

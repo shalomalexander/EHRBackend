@@ -8,8 +8,8 @@ from backend.settings import AUTH_USER_MODEL
 class PersonalInfo(models.Model):
     user=models.OneToOneField(AUTH_USER_MODEL, on_delete = models.CASCADE)
     firstName = models.CharField(max_length=100)
-    middleName = models.CharField(max_length=100,null=True)
-    lastName = models.CharField(max_length=100, null=True)
+    middleName = models.CharField(max_length=100,null=True, blank=True)
+    lastName = models.CharField(max_length=100, null=True, blank=True)
     gender = models.CharField(max_length = 10, null = True)
     dateOfBirth = models.DateField(max_length=10, null = True)
     BLOOD_GROUP_CHOICES = [
@@ -30,9 +30,8 @@ class PersonalInfo(models.Model):
 
     emailId = models.EmailField(max_length=50, null = True)
     mobileNumber = models.CharField(max_length=10, null = True)
-    alternateMobileNumber = models.CharField(max_length=10, null = True)
-    addressLine1 = models.CharField(max_length=50, null = True)
-    addressLine2 = models.CharField(max_length=50, null = True)
+    alternateMobileNumber = models.CharField(max_length=10, null = True, blank=True)
+    addressLine = models.CharField(max_length=50, null = True)
     cityOrTown = models.CharField(max_length=20, null = True)
     district = models.CharField(max_length=20, null = True)
     state = models.CharField(max_length=20, null = True)
