@@ -16,15 +16,17 @@ clf = RandomForestClassifier(n_estimators=100)
 clf = clf.fit(X,np.ravel(y))
 
 #df_test = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/testing.csv"))) #Use for local system
-df_test = pd.read_csv("/var/www/sites/mysite/backend/DiseasePrediction2/training.csv") #Use for PythonAnywhere
-X_df_test = df_test.iloc[:,:-1]
-y_df_test = df_test.iloc[:,-1]
+# df_test = pd.read_csv("/var/www/sites/mysite/backend/DiseasePrediction2/training.csv") #Use for PythonAnywhere
+# X_df_test = df_test.iloc[:,:-1]
+# y_df_test = df_test.iloc[:,-1]
 
-y_pred = clf.predict(X_df_test)
+# y_pred = clf.predict(X_df_test)
 
     # cm = confusion_matrix(y_pred, y_df_test)
     # print(accuracy_score(y_df_test, y_pred))
     # print(accuracy_score(y_df_test, y_pred,normalize=False))
+ 
+    
 
 import collections
 def predict(s1,s2,s3,s4,s5):
