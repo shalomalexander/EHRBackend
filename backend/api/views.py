@@ -560,10 +560,11 @@ class AccessVerificationCreation(APIView):
         print(queryset)
         
         dids = []
+       
         for qs in queryset:
-            dids.append(models.MedicalPractitionerInfo.objects.get(user=qs.did))   
-        serializer = serializers.MedicalPractitionerInfoSerializer(dids, many=True)
-
+            dids.append(models.MedicalPractitionerInfo.objects.select_related("orgId").get(user=qs.did)) 
+           
+        serializer = serializers.MedicalPractitionerOrgInfoSerializer(dids, many=True)
         return Response(serializer.data)    
                  
 

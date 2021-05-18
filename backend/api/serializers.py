@@ -45,7 +45,13 @@ class OrganizationInfoSerializer(serializers.ModelSerializer):
 class MedicalPractitionerInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.MedicalPractitionerInfo
-        fields = '__all__'
+        fields = '__all__'   
+
+class MedicalPractitionerOrgInfoSerializer(serializers.ModelSerializer):
+    orgId = OrganizationInfoSerializer()
+    class Meta:
+        model = models.MedicalPractitionerInfo
+        fields = '__all__'          
 
 class BloodPressureSerializer(serializers.ModelSerializer):
     class Meta:

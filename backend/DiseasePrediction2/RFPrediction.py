@@ -7,7 +7,14 @@ from sklearn.ensemble import RandomForestClassifier
 
 print(os.path.join(os.path.abspath("DiseasePrediction2/testing.csv")))
 #df = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/training.csv"))) #Use for local system
-df = pd.read_csv("/var/www/sites/mysite/backend/DiseasePrediction2/training.csv") #Use for Pythonanywhere
+
+#df = pd.read_csv("/var/www/sites/mysite/backend/DiseasePrediction2/training.csv") #Use for Pythonanywhere
+
+try:
+    df = pd.read_csv("/var/www/sites/mysite/backend/DiseasePrediction2/training.csv") 
+except:
+    df = pd.read_csv(os.path.join(os.path.abspath("DiseasePrediction2/training.csv")))
+      
 
 X = df.iloc[:,:-1]
 y = df.iloc[:,-1]

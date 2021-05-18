@@ -1,8 +1,14 @@
 import os
 import sys
 
-path = "/var/www/sites/mysite/backend/env/envtxt.txt"
+#path = "/var/www/sites/mysite/backend/env/envtxt.txt"
 #path = ".\env\envtxt.txt"
+
+try:
+    path = ".\env\envtxt.txt"
+except:
+    path = "/var/www/sites/mysite/backend/env/envtxt.txt"   
+
 
 class Environment_Variable:
     
