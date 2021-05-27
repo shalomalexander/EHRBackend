@@ -37,6 +37,8 @@ class PersonalInfo(models.Model):
     state = models.CharField(max_length=20, null = True)
     pin = models.CharField(max_length=6, null = True)
     aadhaarCardNumber = models.CharField(max_length=14, null=True)
+    fingerprint = models.ImageField(upload_to='fingerprints/', null = True)
+    profilePicture = models.ImageField(upload_to='profile_pictures/', null = True)
 
 class EmergencyInfo(models.Model):                                      
     relativeName = models.CharField(max_length=100)

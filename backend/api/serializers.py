@@ -13,9 +13,16 @@ from api import models as m
 #         return data_dict
 
 class PersonalInfoSerializer(serializers.ModelSerializer):
+   
     class Meta:
         model = models.PersonalInfo
         fields = '__all__'
+
+    def get_photo_url(self, obj):
+        request = self.context.get('request')
+        photo_url = obj.fingerprint.url
+        profile_url = obj.profilePicture.url
+        return request.build_absolute_uri(photo_url)      
 
 class EmergencyInfoSerializer(serializers.ModelSerializer):
     class Meta:

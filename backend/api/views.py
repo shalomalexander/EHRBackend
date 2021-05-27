@@ -12,7 +12,10 @@ from account.models import User
 import math, random 
 from appV1.models import AccessVerification
 from account.fast2sms import SMS
-
+from django.core.files.storage import default_storage
+import base64
+from django.core.files.base import ContentFile
+from uuid import uuid4
 # Create your views here.
 
 class PersonalInfoList(APIView):
@@ -24,13 +27,23 @@ class PersonalInfoList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = serializers.PersonalInfoSerializer(data = request.data)
+        request_copy = request.data.copy()
+
+        if(request.data.get("profilePicture") is not None and len(request.data.get("profilePicture")) > 0):
+            request_copy["profilePicture"] = self.base64_to_image(request.data.get("profilePicture"))
+
+        serializer = serializers.PersonalInfoSerializer(data = request_copy)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
+
+    def base64_to_image(self, base64_string):
+        format, imgstr = base64_string.split(';base64,')
+        ext = format.split('/')[-1]
+        return ContentFile(base64.b64decode(imgstr), name=uuid4().hex + "." + ext)  
+
 class PersonalInfoOfSpecificUser(APIView):
     serializer_class = serializers.PersonalInfoSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
@@ -43,25 +56,43 @@ class PersonalInfoOfSpecificUser(APIView):
 
     def get(self, request, pk, format=None):
         queryset = self.get_object(pk)
-        serializer = serializers.PersonalInfoSerializer(queryset, many=False)
+        serializer = serializers.PersonalInfoSerializer(queryset, context={"request": request}, many=False)
         return Response(serializer.data) 
 
     def patch(self, request, pk, format=None):
         queryset = self.get_object(pk)
-        serializer = serializers.PersonalInfoSerializer(queryset, data=request.data, partial=True)
+       
+        request_copy = request.data.copy()
+      
+        if(request.data.get("fingerprint") is not None and len(str(queryset.fingerprint)) > 0):
+            default_storage.delete(str(queryset.fingerprint))
+
+        if(request.data.get("profilePicture") is not None and len(str(queryset.profilePicture)) > 0):
+            default_storage.delete(str(queryset.profilePicture))    
+
+        if(request.data.get("profilePicture") is not None):
+            request_copy["profilePicture"] = self.base64_to_image(request.data.get("profilePicture"))
+
+        serializer = serializers.PersonalInfoSerializer(queryset, data=request_copy, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
 
-    def put(self, request, pk, format=None):
-        queryset = self.get_object(pk)
-        serializer = serializers.PersonalInfoSerializer(queryset, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                        
+    # def put(self, request, pk, format=None):
+    #     queryset = self.get_object(pk)
+       
+    #     serializer = serializers.PersonalInfoSerializer(queryset, data=request.data)
+        
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
+    def base64_to_image(self, base64_string):
+        format, imgstr = base64_string.split(';base64,')
+        ext = format.split('/')[-1]
+        return ContentFile(base64.b64decode(imgstr), name=uuid4().hex + "." + ext)
 
 class EmergencyInfoList(APIView):
     serializer_class = serializers.EmergencyInfoSerializer
@@ -511,7 +542,6 @@ class RespiratoryRateOfSpecificUser(APIView):
         serializer = serializers.RespiratoryRateSerializer(queryset, many=True)
         return Response(serializer.data)      
 
-# from django.core.serializers import serialize
 class AccessVerificationCreation(APIView):
     serializer_class = serializers.AccessVerificationSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)

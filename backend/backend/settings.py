@@ -61,13 +61,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
 }
 
-# REST_AUTH_REGISTER_SERIALIZERS = {
-#     'REGISTER_SERIALIZER': 'customUser.serializers.CustomRegisterSerializer',
-# }
 
-# ACCOUNT_ADAPTER = 'customUser.adapter.CustomAccountAdapter'
-
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -166,10 +160,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
-##STATIC_ROOT = "/var/www/sites/mysite/backend/static"
-##STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     '/var/www/sites/mysite/backend/static',
 ]
+
+MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

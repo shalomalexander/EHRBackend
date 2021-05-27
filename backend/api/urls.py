@@ -4,6 +4,7 @@ from . import views
 
 from prediction import views as v
 
+
 urlpatterns = [
     
     path('PersonalInfo/', views.PersonalInfoList.as_view()),
@@ -51,4 +52,4 @@ urlpatterns = [
 
     # path('Register/', include('rest_auth.registration.urls')),
   
-]
+] 
