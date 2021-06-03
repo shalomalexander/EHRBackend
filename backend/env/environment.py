@@ -5,9 +5,10 @@ import sys
 #path = ".\env\envtxt.txt"
 
 try:
-    path = ".\env\envtxt.txt"
-except:
     path = "/var/www/sites/mysite/backend/env/envtxt.txt"   
+except:
+    path = ".\env\envtxt.txt"
+    
 
 
 class Environment_Variable:
