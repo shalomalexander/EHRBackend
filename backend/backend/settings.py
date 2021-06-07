@@ -52,7 +52,8 @@ INSTALLED_APPS = [
 
     'allauth', 
 
-    'DiseasePrediction2'  
+    'DiseasePrediction2',
+    'fingerprint'  
 ]
 
 SITE_ID = 1

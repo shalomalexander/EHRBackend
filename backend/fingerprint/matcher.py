@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 
 def isMatch(fImage, DbImage):
     sift = cv2.xfeatures2d.SIFT_create()
-    keypoints_1, descriptors_1 = sift.detectAndCompute(fImage, None)
+    fimage8bit = cv2.normalize(fImage, None, 0, 255, cv2.NORM_MINMAX).astype('uint8')
+    keypoints_1, descriptors_1 = sift.detectAndCompute(fimage8bit, None)
     keypoints_2, descriptors_2 = sift.detectAndCompute(DbImage, None)
 
     bf = cv2.BFMatcher()

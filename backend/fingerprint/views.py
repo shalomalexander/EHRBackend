@@ -37,7 +37,7 @@ class MatchView(APIView):
 
             #Fetching the saved fingerprint which came along with request
             fImage = cv2.imread("media/" + str(file))
-
+         
             for i in range(len(data)):
                 DbImage = cv2.imread(os.getcwd() + data[i].get('fingerprint').replace("http://127.0.0.1:8000",""))
                 if(isMatch(fImage, DbImage)):
