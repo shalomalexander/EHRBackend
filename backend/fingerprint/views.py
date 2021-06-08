@@ -36,10 +36,17 @@ class MatchView(APIView):
             file_name = default_storage.save(file.name, file)
 
             #Fetching the saved fingerprint which came along with request
-            fImage = cv2.imread("media/" + str(file))
-         
+            if(os.getcwd() == "/home/shalomalexander"):
+                fImage = cv2.imread("../../var/www/sites/mysite/backend/media/" + str(file)) # Will be executed for deployed version
+            else:
+                fImage = cv2.imread("media/" + str(file)) # Will be executed for local version
+
             for i in range(len(data)):
-                DbImage = cv2.imread(os.getcwd() + data[i].get('fingerprint').replace("http://127.0.0.1:8000",""))
+                if(os.getcwd() == "/home/shalomalexander"):
+                    DbImage = cv2.imread("../../var/www/sites/mysite/backend" + data[i].get('fingerprint').replace("https://shalomalexander.pythonanywhere.com","")) # Will be executed for deployed version
+                else:
+                    DbImage = cv2.imread(os.getcwd() + data[i].get('fingerprint').replace("http://127.0.0.1:8000",""))  # Will be executed for local version
+
                 if(isMatch(fImage, DbImage)):
                     response_result.append(data[i])
 
