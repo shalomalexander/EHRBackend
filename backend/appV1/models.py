@@ -167,3 +167,46 @@ class AccessVerification(models.Model):
 
     def get_prescription_field(self):
         return self.prescription_field    
+
+#Creating Model for Lab Report
+class LabReportInfo(models.Model):
+    title = models.CharField(max_length=20, null = True)
+    report = models.FileField(upload_to='labreports/', null = True)
+    tag = models.CharField(max_length=20, null = True)
+    report_status = models.CharField(max_length=20, null = True)
+    created_on = models.DateField(default = datetime.date.today)  
+    userId = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
+    
+class InsuranceAgentInfo(models.Model):
+    user = models.OneToOneField(AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
+    name = models.CharField(max_length=30, null = True)
+    licenseNumber = models.CharField(max_length=20, null = True)
+    mobileNumber = models.CharField(max_length=10, null = True)
+    description= models.TextField(max_length=255, null=True) 
+    address = models.CharField(max_length=30, null = True)
+    tags = models.TextField(max_length=255, null = True)
+    ACTIVE_CHOICES = [
+        ("Y","YES"),
+        ("N", "NO")
+    ]
+    activeIndicator = models.CharField(default="N", max_length=1, choices=ACTIVE_CHOICES)
+    organization = models.CharField(max_length=30, null=True)
+
+class EnrollInsurance(models.Model): 
+    agentId =  models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="enroll_agent_id")   
+    userId = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="enroll_user_id")
+    created_on =  models.DateField(default = datetime.date.today)  
+    validTill = models.DateField(null = True) 
+    policyProvider =  models.CharField(max_length=30, null=True)
+    policyName = models.CharField(max_length=30, null=True)
+    policyNumber = models.CharField(max_length=30, null=True)  
+
+class PatientToAgentRequest(models.Model):
+    agentId =  models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="pta_agent_id")   
+    userId = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="pta_user_id")  
+    created_on =  models.DateField(default = datetime.date.today)  
+    healthrisk = models.IntegerField(default = 30, null=True)
+    tags = models.CharField(max_length=255, null=True)
+    is_approved = models.BooleanField(default = False)
+    is_declined = models.BooleanField(default = False)
+

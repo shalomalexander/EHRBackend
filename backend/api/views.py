@@ -693,7 +693,162 @@ class AccessPrescriptionView(APIView):
 
         return Response("No Access")      
             
+# View for Lab Report
+class LabReportInfoList(APIView):
+    serializer_class = serializers.LabReportInfoSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
 
+    def get(self, request, format=None):
+        queryset = models.LabReportInfo.objects.all()
+        serializer = serializers.LabReportInfoSerializer(queryset,  context={"request": request}, many=True)
+        return Response(serializer.data)
 
+    def post(self, request, format=None):
+        serializer = serializers.LabReportInfoSerializer(data = request.data)         
         
-            
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+
+class LabReportInfoByPid(APIView):
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    # permissions_classes = [
+    #     permissions.IsAuthenticated
+    # ]
+
+    def get(self, request, fk):
+        queryset = models.LabReportInfo.objects.filter(userId = fk)
+        serializer = serializers.LabReportInfoSerializer(queryset,context={"request": request},  many=True)    #Serializer for Get
+        return Response(serializer.data)
+
+class LabReportInfoDetail(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get_object(self, pk):
+        try:
+            return models.LabReportInfo.objects.get(pk=pk)
+        except models.LabReportInfo.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = serializers.LabReportInfoSerializer(snippet)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = serializers.LabReportInfoSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        print(str(snippet.report))
+        if(snippet.report is not None and len(str(snippet.report)) > 0):
+            default_storage.delete(str(snippet.report))
+        snippet.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)     
+
+class InsuranceAgentList(APIView):       
+    serializer_class = serializers.InsuranceAgentInfoSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+
+    def get(self, request, format=None):
+        queryset = models.InsuranceAgentInfo.objects.all()
+        serializer = serializers.InsuranceAgentInfoSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = serializers.InsuranceAgentInfoSerializer(data = request.data)  
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+
+class InsuranceAgentInfoDetail(APIView):
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    
+    def get_object(self, pk):
+        try:
+            return models.InsuranceAgentInfo.objects.get(pk=pk)
+        except models.InsuranceAgentInfo.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = serializers.InsuranceAgentInfoSerializer(snippet)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = serializers.InsuranceAgentInfoSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EnrollInsuranceList(APIView):       
+    serializer_class = serializers.EnrollInsuranceSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+
+    def get(self, request, format=None):
+        queryset = models.EnrollInsurance.objects.all()
+        serializer = serializers.EnrollInsuranceSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = serializers.EnrollInsuranceSerializer(data = request.data)  
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+
+class PatientToAgentRequestList(APIView):
+    serializer_class = serializers.PatientToAgentRequestSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+
+    def get(self, request, format=None):
+        queryset = models.PatientToAgentRequest.objects.all()
+        serializer = serializers.PatientToAgentRequestSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = serializers.PatientToAgentRequestSerializer(data = request.data)  
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+              
+class PatientToAgentRequestDetail(APIView):
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    
+    def get_object(self, pk):
+        try:
+            return models.PatientToAgentRequest.objects.get(pk=pk)
+        except models.PatientToAgentRequest.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = serializers.PatientToAgentRequestSerializer(snippet)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = serializers.PatientToAgentRequestSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

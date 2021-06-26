@@ -50,6 +50,20 @@ urlpatterns = [
 
     path('fingerprint/', include('fingerprint.urls')),
 
+    path('labreportlist/', views.LabReportInfoList.as_view()),
+    path('getlabreport/<int:fk>', views.LabReportInfoByPid.as_view()),
+    path('labreportdetail/<int:pk>', views.LabReportInfoDetail.as_view()),
+
+    path('insuranceagentlist/', views.InsuranceAgentList.as_view()),
+    path('insuranceagent/<int:pk>', views.InsuranceAgentInfoDetail.as_view()),
+   
+    path('enrollinsurance/', views.EnrollInsuranceList.as_view()),
+
+    path('patienttoagentreqeust/', views.PatientToAgentRequestList.as_view()),
+    path('patienttoagentreqeust/<int:pk>', views.PatientToAgentRequestDetail.as_view()),
+
+
+
     # path('Register/', include('rest_auth.registration.urls')),
   
 ] 

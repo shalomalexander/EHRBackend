@@ -114,3 +114,29 @@ class AccessPrescriptionSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         return m.AccessPrescription(**validated_data)     
+
+#Serializer for Lab Report
+class LabReportInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.LabReportInfo
+        fields = '__all__'           
+
+    def get_report_url(self, obj):
+        request = self.context.get('request')
+        report_url = obj.report.url
+        return request.build_absolute_uri(report_url) 
+
+class InsuranceAgentInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.InsuranceAgentInfo
+        fields = '__all__'
+
+class EnrollInsuranceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EnrollInsurance  
+        fields = '__all__'
+
+class PatientToAgentRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PatientToAgentRequest 
+        fields = '__all__'

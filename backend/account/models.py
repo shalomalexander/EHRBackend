@@ -5,7 +5,7 @@ from account.fast2sms import SMS
 # Create your models here.
 class MyUserManager(BaseUserManager):
 
-    def create_user(self, email, username, password = None, is_MP=False, is_pharma=False, phone_number=None):
+    def create_user(self, email, username, password = None, is_MP=False, is_pharma=False, is_insurance=False, phone_number=None):
         if not email:
             raise ValueError("User must have an email")
 
@@ -26,6 +26,7 @@ class MyUserManager(BaseUserManager):
             username = username,
             is_MP = is_MP,
             is_pharma = is_pharma,
+            is_insurance = is_insurance,
             phone_number=phone_number,
             otp=otp
         )                    
@@ -81,6 +82,7 @@ class User(AbstractBaseUser):
     is_superuser = models.BooleanField(default = False)
     is_MP = models.BooleanField(default = False)  #MP = Medical Practitioner
     is_pharma = models.BooleanField(default = False) # for pharmacy users
+    is_insurance = models.BooleanField(default = False) # for Insurance Agents User
     phone_number = models.CharField(unique=True, max_length=10) # User's unique Phone Number
     
     otp = models.CharField(max_length=6, default="000000")
