@@ -184,7 +184,7 @@ class InsuranceAgentInfo(models.Model):
     mobileNumber = models.CharField(max_length=10, null = True)
     description= models.TextField(max_length=255, null=True) 
     address = models.CharField(max_length=30, null = True)
-    tags = models.TextField(max_length=255, null = True, blank=True)
+   
     ACTIVE_CHOICES = [
         ("Y","YES"),
         ("N", "NO")
