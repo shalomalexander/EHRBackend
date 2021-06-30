@@ -2,12 +2,12 @@ import os
 import sys
 
 #path = "/var/www/sites/mysite/backend/env/envtxt.txt"
-#path = ".\env\envtxt.txt"
+path = ".\env\envtxt.txt"
 
-try:
-    path = "/var/www/sites/mysite/backend/env/envtxt.txt"   
-except:
-    path = ".\env\envtxt.txt"
+# try:
+#     path = "/var/www/sites/mysite/backend/env/envtxt.txt"   
+# except:
+#     path = ".\env\envtxt.txt"
     
 
 

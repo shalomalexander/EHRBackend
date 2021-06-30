@@ -323,6 +323,20 @@ class MedicalPractitionerInfoDetail(APIView):
         serializer = serializers.MedicalPractitionerInfoSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    def get_object(self, pk):
+        try:
+            return models.MedicalPractitionerInfo.objects.get(pk=pk)
+        except models.MedicalPractitionerInfo.DoesNotExist:
+            raise Http404
+
+    def patch(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = serializers.MedicalPractitionerInfoSerializer(snippet, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+
 class MedicalPractitionerInfoOfSpecificOrganization(APIView):
     def get_object(self, fk):
         try:
@@ -786,9 +800,9 @@ class InsuranceAgentInfoDetail(APIView):
         serializer = serializers.InsuranceAgentInfoSerializer(snippet)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
+    def patch(self, request, pk, format=None):
         snippet = self.get_object(pk)
-        serializer = serializers.InsuranceAgentInfoSerializer(snippet, data=request.data)
+        serializer = serializers.InsuranceAgentInfoSerializer(snippet, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -845,9 +859,9 @@ class PatientToAgentRequestDetail(APIView):
         serializer = serializers.PatientToAgentRequestSerializer(snippet)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
+    def patch(self, request, pk, format=None):
         snippet = self.get_object(pk)
-        serializer = serializers.PatientToAgentRequestSerializer(snippet, data=request.data)
+        serializer = serializers.PatientToAgentRequestSerializer(snippet, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

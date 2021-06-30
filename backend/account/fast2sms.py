@@ -49,6 +49,8 @@ class SMS:
         print(returned_msg['message'])
 
 
+
+
 if __name__ == "__main__":
     obj = SMS()
-    obj.sendOTP(123456, 9873738859)
+    obj.sendOTP(123456, 9899129257)

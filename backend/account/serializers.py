@@ -31,7 +31,7 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, data):
         user = authenticate(**data)
-        if user and user.is_active:
+        if user and user.is_active and user.verified_field:
             return user  
         raise serializers.ValidationError("Incorrect Credentials")    
 
@@ -40,4 +40,9 @@ class OTPSerializer(serializers.ModelSerializer):
       class Meta:
         model = User
         fields = ('phone_number','otp')
+
+class ResendOTPSerializer(serializers.ModelSerializer):
+      class Meta:
+        model = User
+        fields = ('phone_number')        
 

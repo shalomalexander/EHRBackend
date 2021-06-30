@@ -184,7 +184,7 @@ class InsuranceAgentInfo(models.Model):
     mobileNumber = models.CharField(max_length=10, null = True)
     description= models.TextField(max_length=255, null=True) 
     address = models.CharField(max_length=30, null = True)
-    tags = models.TextField(max_length=255, null = True)
+    tags = models.TextField(max_length=255, null = True, blank=True)
     ACTIVE_CHOICES = [
         ("Y","YES"),
         ("N", "NO")
@@ -205,8 +205,7 @@ class PatientToAgentRequest(models.Model):
     agentId =  models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="pta_agent_id")   
     userId = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="pta_user_id")  
     created_on =  models.DateField(default = datetime.date.today)  
-    healthrisk = models.IntegerField(default = 30, null=True)
-    tags = models.CharField(max_length=255, null=True)
+    tags = models.CharField(max_length=255, null=True, blank=True)
     is_approved = models.BooleanField(default = False)
     is_declined = models.BooleanField(default = False)
 

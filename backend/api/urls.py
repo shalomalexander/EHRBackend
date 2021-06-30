@@ -59,8 +59,8 @@ urlpatterns = [
    
     path('enrollinsurance/', views.EnrollInsuranceList.as_view()),
 
-    path('patienttoagentreqeust/', views.PatientToAgentRequestList.as_view()),
-    path('patienttoagentreqeust/<int:pk>', views.PatientToAgentRequestDetail.as_view()),
+    path('patienttoagentrequest/', views.PatientToAgentRequestList.as_view()),
+    path('patienttoagentrequest/<int:pk>', views.PatientToAgentRequestDetail.as_view()),
 
 
 

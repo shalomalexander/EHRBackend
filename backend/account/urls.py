@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import RegisterAPI, LoginAPI, UserAPI, UserList, OTPView
+from .views import RegisterAPI, LoginAPI, UserAPI, UserList, OTPView, ResendOTPView
 from knox import views as knox_views
 
 urlpatterns = [
@@ -9,5 +9,6 @@ urlpatterns = [
     path('api/auth/user', UserAPI.as_view()),
     path('api/auth/logout', knox_views.LogoutView.as_view(), name="know_logout"),
     path('api/auth/userlist', UserList.as_view()),
-    path('api/auth/verify_otp', OTPView.as_view())
+    path('api/auth/verify_otp', OTPView.as_view()),
+    path('api/auth/resend_otp', ResendOTPView.as_view())
 ]
