@@ -62,6 +62,11 @@ urlpatterns = [
     path('patienttoagentrequest/', views.PatientToAgentRequestList.as_view()),
     path('patienttoagentrequest/<int:pk>', views.PatientToAgentRequestDetail.as_view()),
 
+    path('allergicinfo/', views.AllergicInfoList.as_view()),
+    path('allergicinfo/<int:pk>', views.AllergicInfoDetail.as_view()),
+
+     path('recentactivity/', views.RecentActivityList.as_view()),
+
 
 
     # path('Register/', include('rest_auth.registration.urls')),

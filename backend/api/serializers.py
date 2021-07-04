@@ -140,3 +140,13 @@ class PatientToAgentRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PatientToAgentRequest 
         fields = '__all__'
+
+class AllergicInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AllergicInfo
+        fields = '__all__'
+
+class RecentActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.RecentActivity
+        fields = '__all__'

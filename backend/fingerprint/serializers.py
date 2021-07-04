@@ -11,7 +11,7 @@ class FingerprintResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = PersonalInfo
         fields = ("profilePicture", "user", "firstName", "middleName", "lastName", "dateOfBirth",
-                  "mobileNumber", "alternateMobileNumber", "fingerprint")
+                  "mobileNumber", "alternateMobileNumber", "fingerprint", "bloodGroup")
 
     def get_photo_url(self, obj):
         request = self.context.get('request')

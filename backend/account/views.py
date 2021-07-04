@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 
 from account.otp_form import OtpForm
 from rest_framework.exceptions import APIException
+from appV1 import models
 
 
 #from twilio.rest import Client
@@ -59,6 +60,8 @@ class LoginAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         user = serializer.validated_data
+        ra = models.RecentActivity.objects.create(activity="Welcome back, You just logged in", user_id=user.get_id())
+        ra.save() 
         return Response(
             {
                 "user": UserSerializer(user, context=self.get_serializer_context()).data,

@@ -208,4 +208,16 @@ class PatientToAgentRequest(models.Model):
     tags = models.CharField(max_length=255, null=True, blank=True)
     is_approved = models.BooleanField(default = False)
     is_declined = models.BooleanField(default = False)
+    is_enrolled = models.BooleanField(default = False)
 
+
+class AllergicInfo(models.Model):
+    created_on = models.DateField(default = datetime.date.today)
+    allergy = models.CharField(max_length = 255, null = True, blank=True)
+    note = models.CharField(max_length = 255, null = True, blank=True)
+    userId = models.ForeignKey(AUTH_USER_MODEL, on_delete = models.CASCADE)
+
+class RecentActivity(models.Model):
+    activity = models.CharField(max_length= 255, null=True, blank=True)
+    created_on = models.DateTimeField(default = datetime.datetime.now)
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)

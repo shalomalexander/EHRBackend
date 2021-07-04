@@ -104,3 +104,6 @@ class User(AbstractBaseUser):
 
     def get_phone_number(self):
         return self.phone_number
+
+    def get_id(self):
+        return self.id   

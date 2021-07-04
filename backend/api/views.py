@@ -34,6 +34,8 @@ class PersonalInfoList(APIView):
 
         serializer = serializers.PersonalInfoSerializer(data = request_copy)
         if serializer.is_valid():
+            # ra = models.RecentActivity.objects.create(activity="Created a profile", user_id=request.data["user"])
+            # ra.save()
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -75,6 +77,8 @@ class PersonalInfoOfSpecificUser(APIView):
 
         serializer = serializers.PersonalInfoSerializer(queryset, data=request_copy, partial=True)
         if serializer.is_valid():
+            ra = models.RecentActivity.objects.create(activity="Updated the profile", user_id=pk)
+            ra.save()
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
@@ -133,14 +137,14 @@ class InsuranceInfoList(APIView):
     def get(self, request):
         queryset = models.InsuranceInfo.objects.filter(userId = request.user)
         serializer = serializers.InsuranceInfoSerializer(queryset, many=True)
-        print(request.user)
+       
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = serializers.InsuranceInfoSerializer(data = request.data)         
-        
+        serializer = serializers.InsuranceInfoSerializer(data = request.data)        
         if serializer.is_valid():
             serializer.save(userId = request.user)
+          
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
@@ -186,6 +190,11 @@ class PrescriptionInfoList(APIView):
             #print(activeIndicator)
             if(ln[0:1] == 'D' and activeIndicator=="Y"):
                 serializer.save()
+                ra = models.RecentActivity.objects.create(activity="Prescribed to Patient ID: " + str(request.data["userId"]), user_id=request.data["prescriberId"])
+                ra.save()
+
+                ra = models.RecentActivity.objects.create(activity="A prescription has been added by Doctor ID: " + str(request.data["prescriberId"] ), user_id=request.data["userId"])
+                ra.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response("You dont have the right to prescribe medicines.")    
@@ -574,12 +583,14 @@ class AccessVerificationCreation(APIView):
         phone_number = qs.get_phone_number()
         sms = SMS()
         sms.sendOTP(otp,phone_number)
-        #self.sendOTP(otp,phone_number)
-        print("After OTP send")
-        print(stored_qs)
+
+        ra = models.RecentActivity.objects.create(activity="You raised a request to access health data of Patient ID: " + str(request.data["pid"]), user_id=request.data["did"])
+        ra.save()
+        ra = models.RecentActivity.objects.create(activity="Your health data was requested by Doctor ID: " + str(request.data["did"]), user_id=request.data["pid"])
+        ra.save()
+      
         if not stored_qs:
             if serializer.is_valid():
-                print("Inside If statement")
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -643,6 +654,8 @@ class AccessVerificationUpdate(APIView):
             stored_qs.update(blood_pressure_field=False)      
 
         stored_qs.update(verify_otp=False)
+        ra = models.RecentActivity.objects.create(activity="Declined Access for your Health Record for Doctor ID: " + str(request.data["did"]), user_id=request.data["pid"])
+        ra.save() 
 
         if serializer.is_valid():
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -719,9 +732,10 @@ class LabReportInfoList(APIView):
 
     def post(self, request, format=None):
         serializer = serializers.LabReportInfoSerializer(data = request.data)         
-        
         if serializer.is_valid():
             serializer.save()
+            ra = models.RecentActivity.objects.create(activity="Added a Lab Report", user_id=request.data["userId"])
+            ra.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
@@ -823,6 +837,11 @@ class EnrollInsuranceList(APIView):
         
         if serializer.is_valid():
             serializer.save()
+            ra = models.RecentActivity.objects.create(activity="Enrolled an Insurance for Patient ID: " + str(request.data["userId"]), user_id=request.data["agentId"])
+            ra.save()
+
+            ra = models.RecentActivity.objects.create(activity="Insurance Enrollement successfully done by Agent ID: " + str(request.data["agentId"]), user_id=request.data["userId"])
+            ra.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
@@ -839,6 +858,11 @@ class PatientToAgentRequestList(APIView):
     def post(self, request, format=None):
         serializer = serializers.PatientToAgentRequestSerializer(data = request.data)  
         
+        ra = models.RecentActivity.objects.create(activity="Requested for an Insurance from Insurance Agent ID: " + str(request.data["agentId"]), user_id=request.data["userId"])
+        ra.save() 
+
+        ra = models.RecentActivity.objects.create(activity="Request for an Insurance from Patient ID: " + str(request.data["userId"]), user_id=request.data["agentId"])
+        ra.save()
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -866,3 +890,51 @@ class PatientToAgentRequestDetail(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AllergicInfoList(APIView):
+    serializer_class = serializers.AllergicInfoSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+
+    def get(self, request, format=None):
+        queryset = models.AllergicInfo.objects.all()
+        serializer = serializers.AllergicInfoSerializer(queryset,  many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = serializers.AllergicInfoSerializer(data = request.data)         
+        if serializer.is_valid():
+            serializer.save()
+            ra = models.RecentActivity.objects.create(activity="Added an Allergic Information", user_id=request.data["userId"])
+            ra.save() 
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)            
+
+
+class AllergicInfoDetail(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get_object(self, pk):
+        try:
+            return models.AllergicInfo.objects.get(pk=pk)
+        except models.AllergicInfo.DoesNotExist:
+            raise Http404
+
+    def delete(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        ra = models.RecentActivity.objects.create(activity="Deleted an Allergic Information", user_id=snippet.userId.get_id())
+        ra.save() 
+        snippet.delete()
+        
+        return Response(status=status.HTTP_204_NO_CONTENT) 
+
+class RecentActivityList(APIView):
+    serializer_class = serializers.RecentActivitySerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+
+    def get(self, request, format=None):
+        queryset = models.RecentActivity.objects.all()
+        serializer = serializers.RecentActivitySerializer(queryset,  many=True)
+        return Response(serializer.data)

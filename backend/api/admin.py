@@ -19,4 +19,6 @@ admin.site.register(models.LabReportInfo)
 admin.site.register(models.InsuranceAgentInfo) 
 admin.site.register(models.EnrollInsurance)
 admin.site.register(models.PatientToAgentRequest)
+admin.site.register(models.AllergicInfo)
+admin.site.register(models.RecentActivity)
 

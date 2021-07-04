@@ -9,6 +9,7 @@ from rest_framework.response import Response
 import os
 from .matcher import isMatch
 from rest_framework import status
+from appV1.models import RecentActivity
 
 # Create your views here.
 class MatchView(APIView):
@@ -22,7 +23,10 @@ class MatchView(APIView):
     
     def post(self, request, format=None):
         serializer = serializers.FingerprintRequestSerializer(data=request.data)
-       
+        print(request.data["did"])
+
+        ra = RecentActivity.objects.create(activity="You have used the Fingerprint Access Tool", user_id=request.data["did"])
+        ra.save()
 
         if serializer.is_valid():
             queryset = PersonalInfo.objects.filter(gender=request.data.get("gender"))
@@ -54,7 +58,12 @@ class MatchView(APIView):
             try:
                 default_storage.delete(str(file_name))
             except:
-                print("The image could not be deleted")        
+                print("The image could not be deleted")  
+
+            # print(response_result[0]["user"])   
+
+            ra = RecentActivity.objects.create(activity="Your information was retrieved through Fingerprint by Doctor ID: "+str(request.data["did"]), user_id=response_result[0]["user"])
+            ra.save()       
 
             return Response(response_result)    
         
