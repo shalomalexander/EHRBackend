@@ -40,7 +40,8 @@ class PersonalInfo(models.Model):
     fingerprint = models.ImageField(upload_to='fingerprints/', null = True)
     profilePicture = models.ImageField(upload_to='profile_pictures/', null = True)
 
-class EmergencyInfo(models.Model):                                      
+
+class EmergencyInfo(models.Model): ##########################                                     
     relativeName = models.CharField(max_length=100)
     relationship = models.CharField(max_length=20)
     primaryContactNumber = models.CharField(max_length=10)
@@ -55,7 +56,7 @@ class InsuranceInfo(models.Model):
     validTill = models.DateField()
     userId = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)    
     
-class OrganizationInfo(models.Model):
+class OrganizationInfo(models.Model):##########################
     #organization must not be deleted
     orgName = models.CharField(max_length=20)
     address = models.CharField(max_length=30)
@@ -80,7 +81,7 @@ class MedicalPractitionerInfo(models.Model):
     activeIndicator = models.CharField(default="N", max_length=1, choices=ACTIVE_CHOICES)
     orgId = models.ForeignKey(OrganizationInfo, null= True, on_delete = models.SET_NULL)
 
-class PharmacyInfo(models.Model):
+class PharmacyInfo(models.Model):######################
     user = models.OneToOneField(AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
     pharmacyName = models.CharField(max_length = 20)
     address = models.CharField(max_length = 50)
@@ -122,7 +123,7 @@ class PrescriptionInfo(models.Model):
         super(PrescriptionInfo, self).save()
 
 
-class BloodPressure(models.Model):
+class BloodPressure(models.Model):###################
     systolic = models.IntegerField()
     diastolic = models.IntegerField()
     date = models.DateField(default = datetime.date.today)
@@ -130,19 +131,19 @@ class BloodPressure(models.Model):
     userId = models.ForeignKey(AUTH_USER_MODEL, on_delete = models.CASCADE)
 
 
-class BodyTemperature(models.Model):
+class BodyTemperature(models.Model):#########################
     temp = models.FloatField()
     date = models.DateField(default = datetime.date.today)
     notes = models.CharField(max_length=255, null = True)
     userId = models.ForeignKey(AUTH_USER_MODEL, on_delete = models.CASCADE)
 
-class HeartRate(models.Model):
+class HeartRate(models.Model):#########################
     rate = models.IntegerField()
     date = models.DateField(default = datetime.date.today)
     notes = models.CharField(max_length=255, null = True)
     userId = models.ForeignKey(AUTH_USER_MODEL, on_delete = models.CASCADE)
 
-class RespiratoryRate(models.Model):
+class RespiratoryRate(models.Model):#############################
     rate = models.IntegerField()
     date = models.DateField(default = datetime.date.today)
     notes = models.CharField(max_length = 255, null = True)
@@ -154,7 +155,7 @@ class AccessVerification(models.Model):
     otp = models.CharField(max_length=6, default="000000")
     verify_otp = models.BooleanField(default = False)
     prescription_field = models.BooleanField(default = False)
-    blood_pressure_field = models.BooleanField(default = False)
+    lab_report_field = models.BooleanField(default = False)
 
     def get_otp(self):
         return self.otp
@@ -167,6 +168,9 @@ class AccessVerification(models.Model):
 
     def get_prescription_field(self):
         return self.prescription_field    
+
+    def get_lab_report_field(self):
+        return self.lab_report_field     
 
 #Creating Model for Lab Report
 class LabReportInfo(models.Model):

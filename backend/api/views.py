@@ -583,6 +583,7 @@ class AccessVerificationCreation(APIView):
         phone_number = qs.get_phone_number()
         sms = SMS()
         sms.sendOTP(otp,phone_number)
+        print(request.data)
 
         ra = models.RecentActivity.objects.create(activity="You raised a request to access health data of Patient ID: " + str(request.data["pid"]), user_id=request.data["did"])
         ra.save()
@@ -599,10 +600,10 @@ class AccessVerificationCreation(APIView):
             else:
                 stored_qs.update(prescription_field=False)    
 
-            if request.data.get("blood_pressure_field") is not None:
-                stored_qs.update(blood_pressure_field=request.data.get("blood_pressure_field")) 
+            if request.data.get("lab_report_field") is not None:
+                stored_qs.update(lab_report_field=request.data.get("lab_report_field")) 
             else:
-                stored_qs.update(blood_pressure_field=False)      
+                stored_qs.update(lab_report_field=False)      
 
             stored_qs.update(otp=otp,verify_otp=False)
             if serializer.is_valid():
@@ -648,10 +649,10 @@ class AccessVerificationUpdate(APIView):
         else:
             stored_qs.update(prescription_field=False)    
 
-        if request.data.get("blood_pressure_field") is not None:
-            stored_qs.update(blood_pressure_field=request.data.get("blood_pressure_field")) 
+        if request.data.get("lab_report_field") is not None:
+            stored_qs.update(lab_report_field=request.data.get("lab_report_field")) 
         else:
-            stored_qs.update(blood_pressure_field=False)      
+            stored_qs.update(lab_report_field=False)      
 
         stored_qs.update(verify_otp=False)
         ra = models.RecentActivity.objects.create(activity="Declined Access for your Health Record for Doctor ID: " + str(request.data["did"]), user_id=request.data["pid"])
@@ -690,7 +691,7 @@ class OTPAccessVerificationView(APIView):
 # 2. AccessVerification object has to be checked for verify OTP for the particular PID and DID
 # 3. If verify_otp field is True then send the Response with data  
 
-class AccessPrescriptionView(APIView):
+class DetailAccessView(APIView):
     serializer_class = serializers.AccessPrescriptionSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
 
@@ -711,10 +712,19 @@ class AccessPrescriptionView(APIView):
             return Response("No Access")
         else:    
             if qs[0].get_verify_otp() == True:
+                response_data = {}
+
                 if qs[0].get_prescription_field() == True:
                     userPrescriptions = self.get_object(fk = pid)
                     serializer = serializers.PrescriptionInfoGetSerializer(userPrescriptions, many=True)
-                    return Response(serializer.data)     
+                    response_data["prescriptions"] = serializer.data
+
+                if qs[0].get_lab_report_field() == True:
+                    userReports = models.LabReportInfo.objects.filter(userId = pid)
+                    serializer = serializers.LabReportInfoSerializer(userReports, context={"request": request}, many=True)
+                    response_data["reports"] = serializer.data
+
+                return Response(response_data)         
             else:
                 return Response("No Access")
 

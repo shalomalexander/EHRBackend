@@ -46,7 +46,7 @@ urlpatterns = [
     path('accessverification/', views.AccessVerificationCreation.as_view()),
     path('accessverificationupdate/', views.AccessVerificationUpdate.as_view()),
     path('otpaccessverification/', views.OTPAccessVerificationView.as_view()),
-    path('accessprescription/', views.AccessPrescriptionView.as_view()),
+    path('accessdetail/', views.DetailAccessView.as_view()),
 
     path('fingerprint/', include('fingerprint.urls')),
 
