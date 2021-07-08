@@ -178,7 +178,8 @@ class LabReportInfo(models.Model):
     report = models.FileField(upload_to='labreports/', null = True)
     tag = models.CharField(max_length=20, null = True)
     report_status = models.CharField(max_length=20, null = True)
-    created_on = models.DateField(default = datetime.date.today)  
+    created_on = models.DateField(default = datetime.date.today) 
+    is_visible = models.BooleanField(default=True) 
     userId = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
     
 class InsuranceAgentInfo(models.Model):

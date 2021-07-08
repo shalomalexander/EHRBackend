@@ -776,9 +776,9 @@ class LabReportInfoDetail(APIView):
         serializer = serializers.LabReportInfoSerializer(snippet)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
+    def patch(self, request, pk, format=None):
         snippet = self.get_object(pk)
-        serializer = serializers.LabReportInfoSerializer(snippet, data=request.data)
+        serializer = serializers.LabReportInfoSerializer(snippet, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -829,6 +829,7 @@ class InsuranceAgentInfoDetail(APIView):
         serializer = serializers.InsuranceAgentInfoSerializer(snippet, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
+            
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
